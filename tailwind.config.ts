@@ -19,6 +19,13 @@ export default {
 		},
 		extend: {
 			colors: {
+				meme: {
+					primary: "#4F46E5",
+					secondary: "#6366F1", 
+					accent: "#F97316",
+					like: "#10B981",
+					dislike: "#EF4444",
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
