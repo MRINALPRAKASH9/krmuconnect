@@ -6,7 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
-import { MicrosoftLogo } from 'lucide-react';
+import { Microsoft } from 'lucide-react';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -93,7 +93,7 @@ export default function Auth() {
             className="w-full" 
             onClick={handleMicrosoftSignIn}
           >
-            <MicrosoftLogo className="mr-2 h-5 w-5" />
+            <Microsoft className="mr-2 h-5 w-5" />
             Sign in with Microsoft
           </Button>
         </div>

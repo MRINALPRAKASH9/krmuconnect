@@ -1,8 +1,10 @@
+
 import { useState } from "react";
 import { MemeCard } from "@/components/meme-card";
 import { Navbar } from "@/components/navbar";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { Button } from "@/components/ui/button";
 
 // Sample meme data
 const sampleMemes = [
