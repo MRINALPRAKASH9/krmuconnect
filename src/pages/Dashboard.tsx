@@ -1,8 +1,8 @@
-
 import { useState } from "react";
 import { MemeCard } from "@/components/meme-card";
 import { Navbar } from "@/components/navbar";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 // Sample meme data
 const sampleMemes = [
@@ -39,6 +39,8 @@ const sampleMemes = [
 ];
 
 export default function Dashboard() {
+  const { user, loading } = useAuth();
+  
   const [memes, setMemes] = useState(sampleMemes);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matches, setMatches] = useState<number[]>([]);
@@ -68,6 +70,29 @@ export default function Dashboard() {
   };
 
   const currentMeme = memes[currentIndex];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container py-6 text-center">
+          <h1 className="text-2xl font-bold mb-4">Welcome to KRMU CONNECT</h1>
+          <p className="mb-6">Please sign in to discover memes and connect with others.</p>
+          <Link to="/auth">
+            <Button>Sign In</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
