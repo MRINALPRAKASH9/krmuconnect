@@ -1,9 +1,8 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Home, Users } from "lucide-react";
+import { Home, Users, MessageSquare } from "lucide-react";
 
 export function Navbar() {
   const location = useLocation();
@@ -47,6 +46,23 @@ export function Navbar() {
               className="md:hidden"
             >
               <Users className="h-5 w-5" />
+            </Button>
+          </Link>
+          
+          <Link to="/chat">
+            <Button 
+              variant={location.pathname === "/chat" ? "default" : "ghost"} 
+              size="sm"
+              className="hidden md:flex"
+            >
+              Chat
+            </Button>
+            <Button
+              variant={location.pathname === "/chat" ? "default" : "ghost"}
+              size="icon"
+              className="md:hidden"
+            >
+              <MessageSquare className="h-5 w-5" />
             </Button>
           </Link>
           
