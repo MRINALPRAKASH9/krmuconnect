@@ -4,11 +4,69 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Link } from "react-router-dom";
+
+type MockMatch = {
+  id: number;
+  display_name: string;
+  username: string;
+  study_year: number;
+  course: string;
+  match_percentage: number;
+  avatar_url: string;
+};
+
+const mockMatches: MockMatch[] = [
+  {
+    id: 1,
+    display_name: "John Doe",
+    username: "john_memer",
+    study_year: 2,
+    course: "Computer Science",
+    match_percentage: 90,
+    avatar_url: "https://source.unsplash.com/random/150x150?face1"
+  },
+  {
+    id: 2,
+    display_name: "Jane Smith",
+    username: "jane_memequeen",
+    study_year: 3,
+    course: "Digital Arts",
+    match_percentage: 85,
+    avatar_url: "https://source.unsplash.com/random/150x150?face2"
+  },
+  {
+    id: 3,
+    display_name: "Alex Johnson",
+    username: "meme_master",
+    study_year: 1,
+    course: "Engineering",
+    match_percentage: 80,
+    avatar_url: "https://source.unsplash.com/random/150x150?face3"
+  }
+];
 
 export default function Matches() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <main className="container py-6">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Please sign in to view your matches</h1>
+            <Link to="/auth">
+              <Button>Sign In</Button>
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="container py-6">
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Your Meme Matches</h1>
@@ -17,19 +75,19 @@ export default function Matches() {
           </p>
           
           <div className="grid gap-6 md:grid-cols-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Card key={i}>
+            {mockMatches.map((match) => (
+              <Card key={match.id}>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-16 w-16">
-                      <AvatarImage src={`https://source.unsplash.com/random/150x150?face${i+10}`} alt="User" />
-                      <AvatarFallback>U{i}</AvatarFallback>
+                      <AvatarImage src={match.avatar_url} alt={match.display_name} />
+                      <AvatarFallback>{match.display_name[0]}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-medium">{match.display_name}</h3>
                         <Badge variant="secondary" className="text-xs">
-                          {90-i*5}% Match
+                          {match.match_percentage}% Match
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">@{match.username}</p>
