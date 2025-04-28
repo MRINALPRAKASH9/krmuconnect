@@ -86,16 +86,33 @@ export default function Profile() {
 
       if (profileError) throw profileError;
 
-      // Show success message and refresh user data
+      // Update user metadata through Supabase auth
+      const { data: { user: updatedUser }, error: metadataError } = await supabase.auth.updateUser({
+        data: {
+          display_name: formData.displayName,
+          username: formData.userId,
+          study_year: formData.year,
+          course: formData.course
+        }
+      });
+
+      if (metadataError) throw metadataError;
+
+      // Show success message
       toast({
         title: "Success",
         description: "Profile updated successfully",
       });
 
-      const { data: { user: refreshedUser } } = await supabase.auth.getUser();
-      if (refreshedUser) {
-        // Force a page refresh to show updated data
-        window.location.reload();
+      // Update local state
+      if (updatedUser) {
+        setFormData({
+          displayName: updatedUser.user_metadata?.display_name || "",
+          userId: updatedUser.user_metadata?.username || "",
+          year: updatedUser.user_metadata?.study_year || "",
+          course: updatedUser.user_metadata?.course || ""
+        });
+        setIsEditing(false);
       }
     } catch (error) {
       console.error('Error updating profile:', error);
