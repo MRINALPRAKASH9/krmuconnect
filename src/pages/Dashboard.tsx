@@ -74,7 +74,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="container py-6">
         <div className="flex flex-col gap-6">
           <div className="flex justify-between items-center">
