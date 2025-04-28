@@ -1,12 +1,43 @@
-import { Navbar } from "@/components/navbar";
+
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Profile() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    displayName: user?.user_metadata?.display_name || "",
+    userId: user?.user_metadata?.username || "",
+    year: user?.user_metadata?.study_year || "",
+    course: user?.user_metadata?.course || ""
+  });
+  const [lastUsernameUpdate, setLastUsernameUpdate] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      const fetchLastUpdate = async () => {
+        const { data, error } = await supabase
+          .from('profile_updates')
+          .select('last_username_update')
+          .eq('user_id', user.id)
+          .single();
+
+        if (!error && data) {
+          setLastUsernameUpdate(data.last_username_update);
+        }
+      };
+      fetchLastUpdate();
+    }
+  }, [user]);
 
   if (!user) {
     return (
@@ -23,6 +54,63 @@ export default function Profile() {
     );
   }
 
+  const canChangeUsername = () => {
+    if (!lastUsernameUpdate) return true;
+    const lastUpdate = new Date(lastUsernameUpdate);
+    const daysSinceUpdate = Math.floor((Date.now() - lastUpdate.getTime()) / (1000 * 60 * 60 * 24));
+    return daysSinceUpdate >= 20;
+  };
+
+  const handleSave = async () => {
+    try {
+      const updates = {
+        id: user.id,
+        display_name: formData.displayName,
+        user_metadata: {
+          study_year: formData.year,
+          course: formData.course
+        }
+      };
+
+      if (formData.userId !== user.user_metadata?.username) {
+        if (!canChangeUsername()) {
+          toast({
+            title: "Cannot update username",
+            description: "You can only change your username once every 20 days.",
+            variant: "destructive"
+          });
+          return;
+        }
+        updates.user_metadata.username = formData.userId;
+        await supabase
+          .from('profile_updates')
+          .upsert({ 
+            user_id: user.id,
+            last_username_update: new Date().toISOString()
+          });
+      }
+
+      const { error } = await supabase
+        .from('profiles')
+        .upsert(updates);
+
+      if (error) throw error;
+
+      setIsEditing(false);
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been successfully updated."
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <main className="container py-6">
@@ -32,9 +120,52 @@ export default function Profile() {
               <AvatarImage src={user.user_metadata?.avatar_url || "https://github.com/shadcn.png"} alt="Profile" />
               <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
             </Avatar>
-            <h1 className="mt-4 text-2xl font-bold">{user.user_metadata?.display_name || "KRMU User"}</h1>
-            <p className="text-muted-foreground">@{user.user_metadata?.username}</p>
-            <p className="text-muted-foreground">Year {user?.user_metadata?.study_year || 'N/A'} - {user?.user_metadata?.course || 'N/A'}</p>
+            {isEditing ? (
+              <div className="mt-4 space-y-4 w-full max-w-sm">
+                <Input
+                  placeholder="Display Name"
+                  value={formData.displayName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
+                />
+                <Input
+                  placeholder="User ID"
+                  value={formData.userId}
+                  onChange={(e) => setFormData(prev => ({ ...prev, userId: e.target.value }))}
+                  disabled={!canChangeUsername()}
+                />
+                <Select
+                  value={formData.year}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, year: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Study Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4].map(year => (
+                      <SelectItem key={year} value={year.toString()}>
+                        Year {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  placeholder="Course"
+                  value={formData.course}
+                  onChange={(e) => setFormData(prev => ({ ...prev, course: e.target.value }))}
+                />
+                <div className="flex gap-2 justify-center mt-4">
+                  <Button onClick={handleSave}>Save</Button>
+                  <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 className="mt-4 text-2xl font-bold">{user.user_metadata?.display_name || "KRMU User"}</h1>
+                <p className="text-muted-foreground">@{user.user_metadata?.username}</p>
+                <p className="text-muted-foreground">Year {user.user_metadata?.study_year || 'N/A'} - {user.user_metadata?.course || 'N/A'}</p>
+                <Button onClick={() => setIsEditing(true)} className="mt-4">Edit Profile</Button>
+              </>
+            )}
           </div>
 
           <div className="w-full max-w-md">
