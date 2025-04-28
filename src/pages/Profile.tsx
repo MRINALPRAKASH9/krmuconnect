@@ -63,15 +63,30 @@ export default function Profile() {
 
   const handleSave = async () => {
     try {
-      const updates = {
-        id: user.id,
-        display_name: formData.displayName,
-        user_metadata: {
+      // Update user metadata through Supabase auth
+      const { data: userUpdate, error: userError } = await supabase.auth.updateUser({
+        data: {
+          display_name: formData.displayName,
+          username: formData.userId,
           study_year: formData.year,
           course: formData.course
         }
-      };
+      });
 
+      if (userError) throw userError;
+
+      // Update profile in profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          username: formData.userId,
+          study_year: formData.year
+        });
+
+      if (profileError) throw profileError;
+
+      // Update username change timestamp if username was changed
       if (formData.userId !== user.user_metadata?.username) {
         if (!canChangeUsername()) {
           toast({
@@ -81,18 +96,16 @@ export default function Profile() {
           });
           return;
         }
-        updates.user_metadata.username = formData.userId;
-        await supabase
+
+        const { error: timestampError } = await supabase
           .from('profile_updates')
           .upsert({ 
             user_id: user.id,
             last_username_update: new Date().toISOString()
           });
-      }
 
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(updates);
+        if (timestampError) throw timestampError;
+      }
 
       if (error) throw error;
 
