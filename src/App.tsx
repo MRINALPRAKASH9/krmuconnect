@@ -12,6 +12,7 @@ import Matches from "./pages/Matches";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
+import ProfileSetup from "./pages/ProfileSetup";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/matches" element={<Matches />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

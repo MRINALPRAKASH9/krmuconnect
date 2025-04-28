@@ -16,8 +16,9 @@ export default function Profile() {
               <AvatarImage src="https://github.com/shadcn.png" alt="Profile" />
               <AvatarFallback>KU</AvatarFallback>
             </Avatar>
-            <h1 className="mt-4 text-2xl font-bold">KRMU User</h1>
-            <p className="text-muted-foreground">Computer Science</p>
+            <h1 className="mt-4 text-2xl font-bold">{user?.user_metadata?.display_name || "KRMU User"}</h1>
+            <p className="text-muted-foreground">@{user?.user_metadata?.username}</p>
+            <p className="text-muted-foreground">Year {user?.user_metadata?.study_year} - {user?.user_metadata?.course}</p>
           </div>
 
           <div className="w-full max-w-md">

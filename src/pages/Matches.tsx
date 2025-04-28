@@ -27,13 +27,14 @@ export default function Matches() {
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-medium">KRMU Student {i}</h3>
+                        <h3 className="font-medium">{match.display_name}</h3>
                         <Badge variant="secondary" className="text-xs">
                           {90-i*5}% Match
                         </Badge>
                       </div>
+                      <p className="text-sm text-muted-foreground">@{match.username}</p>
                       <p className="text-sm text-muted-foreground">
-                        Shared interests: Programming, Campus Life
+                        Year {match.study_year} - {match.course}
                       </p>
                       <div className="flex gap-2 mt-2">
                         <Button size="sm" variant="default">Connect</Button>

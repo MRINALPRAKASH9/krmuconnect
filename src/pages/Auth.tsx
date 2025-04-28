@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +29,7 @@ export default function Auth() {
 
       if (error) throw error;
       toast.success('Sign up successful! Check your email for confirmation.');
-      navigate('/');
+      navigate('/profile-setup'); // Updated navigation
     } catch (error: any) {
       toast.error(error.message || 'Sign up failed');
     }
@@ -45,7 +44,7 @@ export default function Auth() {
       });
 
       if (error) throw error;
-      navigate('/');
+      navigate('/profile-setup'); // Updated navigation
     } catch (error: any) {
       toast.error(error.message || 'Sign in failed');
     }
@@ -66,7 +65,7 @@ export default function Auth() {
         <h2 className="text-2xl font-bold text-center">
           {isSignUp ? 'Sign Up' : 'Sign In'}
         </h2>
-        
+
         <form onSubmit={isSignUp ? handleEmailSignUp : handleEmailSignIn} className="space-y-4">
           <Input 
             type="email" 
