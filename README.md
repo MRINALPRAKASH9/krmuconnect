@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://krmuconnect.dev/projects/125ce57f-8714-4374-a2e6-f95b3f20af7a
+**URL**: https://lovable.dev/projects/125ce57f-8714-4374-a2e6-f95b3f20af7a
 
 ## How can I edit this code?
 
