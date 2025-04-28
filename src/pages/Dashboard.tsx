@@ -85,9 +85,17 @@ export default function Dashboard() {
     
     // Move to next meme immediately
     setCurrentIndex((prev) => {
-      const nextIndex = prev + 1;
-      return nextIndex >= memes.length ? 0 : nextIndex;
+      if (prev + 1 >= memes.length) {
+        return 0;
+      }
+      return prev + 1;
     });
+
+    // Also create the meme_likes table if it doesn't exist
+    const { error: tableError } = await supabase.rpc('create_meme_likes_if_not_exists');
+    if (tableError) {
+      console.error('Error creating table:', tableError);
+    }
   };
 
   if (loading) {
