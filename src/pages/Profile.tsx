@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -76,7 +75,7 @@ export default function Profile() {
 
       if (userError) throw userError;
 
-      // Update only username in profiles table
+      // Update profile in profiles table
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
@@ -87,34 +86,17 @@ export default function Profile() {
 
       if (profileError) throw profileError;
 
-      // Update username change timestamp if username was changed
-      if (formData.userId !== user.user_metadata?.username) {
-        if (!canChangeUsername()) {
-          toast({
-            title: "Cannot update username",
-            description: "You can only change your username once every 20 days.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        const { error: timestampError } = await supabase
-          .from('profile_updates')
-          .upsert({ 
-            user_id: user.id,
-            last_username_update: new Date().toISOString()
-          });
-
-        if (timestampError) throw timestampError;
-      }
-
-      if (error) throw error;
-
-      setIsEditing(false);
+      // Show success message and refresh user data
       toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated."
+        title: "Success",
+        description: "Profile updated successfully",
       });
+
+      const { data: { user: refreshedUser } } = await supabase.auth.getUser();
+      if (refreshedUser) {
+        // Force a page refresh to show updated data
+        window.location.reload();
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
