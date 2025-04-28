@@ -30,8 +30,10 @@ export default function ProfileSetup() {
           id: user.id,
           username: formData.userId,
           display_name: formData.displayName,
-          study_year: formData.year,
-          course: formData.course
+          user_metadata: {
+            study_year: formData.year,
+            course: formData.course
+          }
         });
 
       if (error) throw error;

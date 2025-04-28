@@ -34,7 +34,7 @@ export default function Profile() {
             </Avatar>
             <h1 className="mt-4 text-2xl font-bold">{user.user_metadata?.display_name || "KRMU User"}</h1>
             <p className="text-muted-foreground">@{user.user_metadata?.username}</p>
-            <p className="text-muted-foreground">Year {user.user_metadata?.study_year} - {user.user_metadata?.course}</p>
+            <p className="text-muted-foreground">Year {user?.user_metadata?.study_year || 'N/A'} - {user?.user_metadata?.course || 'N/A'}</p>
           </div>
 
           <div className="w-full max-w-md">
