@@ -54,6 +54,14 @@ export default function Dashboard() {
   const handleSwipe = async (id: string, liked: boolean) => {
     if (!user) return;
     
+    // Move to next meme immediately
+    setCurrentIndex((prev) => {
+      if (prev + 1 >= memes.length) {
+        return 0;
+      }
+      return prev + 1;
+    });
+    
     if (liked) {
       setLikedMemes((prev) => [...prev, id]);
       
