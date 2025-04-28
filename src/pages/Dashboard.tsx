@@ -34,54 +34,60 @@ export default function Dashboard() {
     if (liked) {
       setLikedMemes((prev) => [...prev, id]);
       
-      // Record the like in database
-      const { data: existingLikes, error: likesError } = await supabase
-        .from('meme_likes')
-        .select('user_id')
-        .eq('meme_id', id);
+      try {
+        // Record the like in database
+        const { data: existingLikes, error: likesError } = await supabase
+          .from('meme_likes')
+          .select('user_id')
+          .eq('meme_id', id);
 
-      if (likesError) {
-        console.error('Error checking likes:', likesError);
-        return;
-      }
+        if (likesError) {
+          console.error('Error checking likes:', likesError);
+          return;
+        }
 
-      // Add the new like
-      const { error: insertError } = await supabase
-        .from('meme_likes')
-        .insert({ user_id: user.id, meme_id: id });
+        // Add the new like
+        const { error: insertError } = await supabase
+          .from('meme_likes')
+          .insert({ user_id: user.id, meme_id: id });
 
-      if (insertError) {
-        console.error('Error recording like:', insertError);
-        return;
-      }
+        if (insertError) {
+          console.error('Error recording like:', insertError);
+          return;
+        }
 
-      // Check for matches
-      if (existingLikes && existingLikes.length > 0) {
-        const matchedUsers = existingLikes.map(like => like.user_id);
-        
-        // Create match entries
-        const matchPromises = matchedUsers.map(matchedUserId => 
-          supabase.from('matches').insert({
-            user_id_1: user.id,
-            user_id_2: matchedUserId,
-            meme_id: id
-          })
-        );
+        // Check for matches
+        if (existingLikes && existingLikes.length > 0) {
+          const matchedUsers = existingLikes.map(like => like.user_id);
+          
+          // Create match entries
+          const matchPromises = matchedUsers.map(matchedUserId => 
+            supabase.from('matches').insert({
+              user_id_1: user.id,
+              user_id_2: matchedUserId,
+              meme_id: id
+            })
+          );
 
-        await Promise.all(matchPromises);
-        
-        setMatches((prev) => [...prev, id]);
-        setMatchNotification(true);
-        
-        setTimeout(() => {
-          setMatchNotification(false);
-        }, 3000);
+          await Promise.all(matchPromises);
+          
+          setMatches((prev) => [...prev, id]);
+          setMatchNotification(true);
+          
+          setTimeout(() => {
+            setMatchNotification(false);
+          }, 3000);
+        }
+      } catch (error) {
+        console.error('Error processing like:', error);
       }
     }
     
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % memes.length);
-    }, 100);
+    // Move to next meme immediately
+    setCurrentIndex((prev) => {
+      const nextIndex = prev + 1;
+      return nextIndex >= memes.length ? 0 : nextIndex;
+    });
   };
 
   if (loading) {
