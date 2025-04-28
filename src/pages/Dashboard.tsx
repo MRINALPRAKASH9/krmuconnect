@@ -15,6 +15,29 @@ export default function Dashboard() {
   const [likedMemes, setLikedMemes] = useState<string[]>([]);
   const [matchNotification, setMatchNotification] = useState<boolean>(false);
 
+  // Create necessary tables if they don't exist
+  useEffect(() => {
+    const createTables = async () => {
+      // Create meme_likes table
+      await supabase.rpc('create_meme_likes_if_not_exists');
+      
+      // Create matches table
+      const { error: matchesError } = await supabase.query(`
+        CREATE TABLE IF NOT EXISTS matches (
+          id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+          user_id_1 UUID NOT NULL,
+          user_id_2 UUID NOT NULL,
+          meme_id UUID NOT NULL,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        );
+      `);
+      
+      if (matchesError) console.error('Error creating matches table:', matchesError);
+    };
+    
+    createTables();
+  }, []);
+
   const { data: memes = [], refetch: refetchMemes } = useQuery({
     queryKey: ['memes'],
     queryFn: async () => {
