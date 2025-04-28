@@ -76,16 +76,21 @@ export function MemeCard({ id, imageUrl, title, onSwipe }: MemeCardProps) {
             src={imageUrl}
             alt={title}
             className="w-full h-full object-cover"
+            loading="eager"
+            onError={(e) => {
+              console.error("Image failed to load:", imageUrl);
+              e.currentTarget.src = "https://source.unsplash.com/random/?meme";
+            }}
           />
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
             <h3 className="text-white font-medium">{title}</h3>
           </div>
         </div>
         <div className="flex justify-between p-4">
-          <Button onClick={handleDislike} variant="outline" size="icon" className="rounded-full border-meme-dislike text-meme-dislike">
+          <Button onClick={handleDislike} variant="outline" size="icon" className="rounded-full border-red-500 text-red-500 hover:bg-red-100 hover:text-red-600">
             <X className="h-6 w-6" />
           </Button>
-          <Button onClick={handleLike} variant="outline" size="icon" className="rounded-full border-meme-like text-meme-like">
+          <Button onClick={handleLike} variant="outline" size="icon" className="rounded-full border-green-500 text-green-500 hover:bg-green-100 hover:text-green-600">
             <Heart className="h-6 w-6" />
           </Button>
         </div>
