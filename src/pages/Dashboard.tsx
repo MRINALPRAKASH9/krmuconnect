@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MemeCard } from "@/components/meme-card";
 import { Navbar } from "@/components/navbar";
 import { Link } from "react-router-dom";
@@ -114,11 +114,19 @@ export default function Dashboard() {
       return prev + 1;
     });
 
-    // Also create the meme_likes table if it doesn't exist
-    const { error: tableError } = await supabase.rpc('create_meme_likes_if_not_exists');
-    if (tableError) {
-      console.error('Error creating table:', tableError);
-    }
+    // Create meme_likes table if it doesn't exist
+      const { error: tableError } = await supabase.query(`
+        CREATE TABLE IF NOT EXISTS meme_likes (
+          id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+          user_id UUID REFERENCES auth.users(id),
+          meme_id UUID REFERENCES memes(id),
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+          UNIQUE(user_id, meme_id)
+        );
+      `);
+      if (tableError) {
+        console.error('Error creating table:', tableError);
+      }
   };
 
   if (loading) {
