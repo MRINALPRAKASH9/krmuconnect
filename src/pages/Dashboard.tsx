@@ -4,15 +4,15 @@ import { Navbar } from "@/components/navbar";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
-import { UploadMeme } from "@/components/upload-meme";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { UploadModal } from "@/components/upload-modal";
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [matches, setMatches] = useState<number[]>([]);
-  const [likedMemes, setLikedMemes] = useState<number[]>([]);
+  const [matches, setMatches] = useState<string[]>([]);
+  const [likedMemes, setLikedMemes] = useState<string[]>([]);
   const [matchNotification, setMatchNotification] = useState<boolean>(false);
 
   const { data: memes = [], refetch: refetchMemes } = useQuery({
@@ -28,7 +28,7 @@ export default function Dashboard() {
     }
   });
 
-  const handleSwipe = (id: number, liked: boolean) => {
+  const handleSwipe = (id: string, liked: boolean) => {
     if (liked) {
       setLikedMemes((prev) => [...prev, id]);
       
@@ -78,13 +78,14 @@ export default function Dashboard() {
       <main className="container py-6">
         <div className="flex flex-col gap-6">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">KRMU CONNECT</h1>
-            <Link to="/matches" className="text-primary hover:underline">
-              {matches.length} matches
-            </Link>
+            <h1 className="text-2xl font-bold">Discover</h1>
+            <div className="flex items-center gap-4">
+              <UploadModal onUploadComplete={refetchMemes} />
+              <Link to="/matches" className="text-primary hover:underline">
+                {matches.length} matches
+              </Link>
+            </div>
           </div>
-
-          <UploadMeme onUploadComplete={refetchMemes} />
           
           {currentMeme && (
             <div className="py-8 flex justify-center">
@@ -104,7 +105,7 @@ export default function Dashboard() {
           </div>
 
           {matchNotification && (
-            <div className="fixed bottom-6 right-6 bg-meme-primary text-white p-4 rounded-lg shadow-lg animate-fade-in">
+            <div className="fixed bottom-6 right-6 bg-primary text-primary-foreground p-4 rounded-lg shadow-lg animate-fade-in">
               <p className="font-bold">New Match!</p>
               <p>Someone also liked this meme</p>
               <Link to="/matches" className="mt-2 block text-sm underline">

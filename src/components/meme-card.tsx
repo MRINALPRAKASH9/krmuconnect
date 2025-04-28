@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Heart, X } from "lucide-react";
 
 interface MemeCardProps {
-  id: number;
+  id: string;
   imageUrl: string;
   title: string;
-  onSwipe: (id: number, liked: boolean) => void;
+  onSwipe: (id: string, liked: boolean) => void;
 }
 
 export function MemeCard({ id, imageUrl, title, onSwipe }: MemeCardProps) {
