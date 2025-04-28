@@ -69,19 +69,20 @@ export default function Profile() {
           display_name: formData.displayName,
           username: formData.userId,
           study_year: formData.year,
-          course: formData.course
+          course: formData.course,
+          updated_at: new Date().toISOString()
         }
       });
 
       if (userError) throw userError;
 
-      // Update profile in profiles table
+      // Update only username in profiles table
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
           id: user.id,
           username: formData.userId,
-          study_year: formData.year
+          updated_at: new Date().toISOString()
         });
 
       if (profileError) throw profileError;
