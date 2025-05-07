@@ -1,65 +1,109 @@
-# Welcome to Our Mini Project
+# KRMU CONNECT - MINI PROJECT WEBAPP
+KRMU Connect is a web-based platform designed to foster social interaction among students of K.R. Mangalam University using humor and memes as the core medium. The platform enables users to swipe on memes, find like-minded peers based on reactions, and build new friendships in a lighthearted and student-focused environment.
 
-## How can I edit this code?
+🧠 Inspiration
+While other platforms like Tinder or Bumble focus on dating, and apps like Reddit and Discord enable community discussions, KRMU Connect aims to combine meme culture and friendship discovery within a university ecosystem. We were inspired by meme-based platforms like Schmooze and student-centric networking concepts like Harvard Connect.
 
-There are several ways of editing your application.
+🚀 Features
+
+Meme feed with swipe-left (❌) or swipe-right (❤️) interface
+
+Matching logic based on shared meme reactions
+
+User profile setup (name, photo, hobbies, bio)
+
+Supabase backend for authentication and data storage
+
+Responsive, mobile-friendly interface built with Tailwind CSS
+
+🛠️ Tech Stack
+
+Frontend:
+
+HTML
+
+Tailwind CSS
+
+JavaScript
+
+Backend:
+
+Supabase (for authentication and database)
+
+PostgreSQL (via Supabase)
+
+Extras:
+
+JSON for data structure handling
+
+TypeScript support in select components (.ts)
+
+Git & GitHub for version control
+
+📁 Folder Structure
+
+├── index.html
+├── /css
+│ └── styles.css
+├── /js
+│ ├── main.js
+│ ├── matchLogic.js
+│ └── auth.js
+├── /assets
+│ └── memes/
+│ └── profileIcons/
+├── /database
+│ └── supabase_schema.sql
+├── README.md
+
+🧪 Testing Conducted
+
+Unit Testing: Swiping logic and profile form validation
+
+Integration Testing: Frontend ↔ Supabase syncing
+
+System Testing: End-to-end walkthrough of meme discovery → match
+
+User Testing: Feedback from 10 KRMU students
+
+💡 Future Scope
+
+Add real-time chat between matched users
+
+Personalized meme feed based on tags
+
+Meme upload feature with moderation
+
+Dark Mode and native mobile app support
+
+Alumni networking layer in future versions
+
+👨‍💻 Team Members
+
+Yashieta Sethi (2401010187) — UI/UX + Frontend
+
+Parinita Singh (2401010252) — Frontend + Testing
+
+Mrinal Prakash (2401010182) — Authentication + Supabase Integration 
+
+Pratham Sharma (2401010229) — Backend + Database
+
+🎓 Mentor
+
+Ms. Mansi Kajal — School of Engineering & Technology (SOET), K.R. Mangalam University
+
+📸 Screenshots & Wireframes
+
+UI Wireframes, Testing Flowcharts, and App Screenshots are included in the /assets/wireframes and /assets/screens folders.
+
+📃 License
+
+This project is created as part of the academic curriculum. All content and code are educational in nature and may be reused with proper credit.
+
+📌 Note
+
+This is a web-first, non-dating platform for KRMU students only. Humor + Identity = Connection.
 
 
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/125ce57f-8714-4374-a2e6-f95b3f20af7a) and click on Share -> Publish.
-
-## Can I connect a custom domain to my project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 
